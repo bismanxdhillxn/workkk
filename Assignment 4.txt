@@ -129,3 +129,12 @@ university> db.StudentsAssignment.find({}).sort({ age : -1})
     grade: 'D'
   }
 ]
+db.StudentsAssignment.find({ age: { $gt: 18, $lt: 23}})
+[
+  {
+    _id: ObjectId('6729d7a43b0f304b7a0d8193'),
+    name: 'John',
+    age: 20,
+    grade: 'A'
+  }
+]
