@@ -1,0 +1,240 @@
+Q U E R Y   1 
+university> db.createCollection("Employees")
+{ ok: 1 }
+university> db.Employees.insertMany([{name: "John Doe", age:30, experience:5, department:"CSE"},{name: "Alice", age:25, experience:6, department:"BBA"},{name: "Bob", age:35, experience:8, department:"CSE"},{name:"Rob", age:60, experience:30, department:"CSE"}])   
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b269e75b0adb5d70d8190'),
+    '1': ObjectId('672b269e75b0adb5d70d8191'),
+    '3': ObjectId('672b269e75b0adb5d70d8193')
+  }
+}
+university> db.Employees.find({$or:[{age:{$gt:30}},{experience:{$gt:5}}]})
+[
+  {
+    _id: ObjectId('672b269e75b0adb5d70d8191'),
+    name: 'Alice',
+    age: 25,
+    experience: 6,
+    department: 'BBA'
+  },
+  {
+    _id: ObjectId('672b269e75b0adb5d70d8192'),
+    name: 'Bob',
+    age: 35,
+    experience: 8,
+    department: 'CSE'
+  },
+  {
+    _id: ObjectId('672b269e75b0adb5d70d8193'),
+    name: 'Rob',
+    age: 60,
+    experience: 30,
+    department: 'CSE'
+  }
+]
+---------------------------------------------------
+Q U E R Y  2
+university> db.createCollection("Products")
+{ ok: 1 }
+
+university> db.Products.insertMany([{product_name:"Sabun", stock:500, price:20},{product},{},{}])
+
+university> db.Products.insertMany([{product_name:"Sabun", stock:500, price:20},{product_name:"Oil", stock:200, price:100},{product_name:"Brush", stock:300, price:100},{name:"Paper", stock:600, price:1}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b292375b0adb5d70d8194'),
+    '1': ObjectId('672b292375b0adb5d70d8195'),
+    '2': ObjectId('672b292375b0adb5d70d8196'),
+    '3': ObjectId('672b292375b0adb5d70d8197')
+  }
+}
+university> db.products.find({$and:[{stock:{$gt:0}, price:{$lt:50}}]})
+-------------------------------------------------------------------------
+Q U E R Y  3
+university> db.createCollection("studentsassign")
+{ ok: 1 }
+
+university> db.studentsassign.insertMany([{name:"Tony", enrolled:true, grade:"C"},{name: "Donald", enrolled:true, grade:"B"},{name:"Kamala", enrolled:false, grade:"F"},{name:"Biden", enrolled:false, grade:"F"}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b2b1c75b0adb5d70d8198'),
+    '1': ObjectId('672b2b1c75b0adb5d70d8199'),
+    '2': ObjectId('672b2b1c75b0adb5d70d819a'),
+    '3': ObjectId('672b2b1c75b0adb5d70d819b')
+  }
+}
+
+university> db.studentsassign.find({$or:[{ enrolled: false}, {grade: {$lt : "C"}}]})    
+[
+  {
+    _id: ObjectId('672b2b1c75b0adb5d70d8199'),
+    name: 'Donald',
+    enrolled: true,
+    grade: 'B'
+  },
+  {
+    _id: ObjectId('672b2b1c75b0adb5d70d819a'),
+    name: 'Kamala',
+    enrolled: false,
+    grade: 'F'
+  },
+  {
+    _id: ObjectId('672b2b1c75b0adb5d70d819b'),
+    name: 'Biden',
+    enrolled: false,
+    grade: 'F'
+  }
+]
+--------------------------------------------------------------------------
+Q U E R Y  4
+university> db.createCollection("courses")
+{ ok: 1 }
+
+university> db.courses.insertMany([{instructor:"David", duration:6},{instructor:"Hagrid",duration:8},{instructor:"Dumble", duration:3}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b2c2c75b0adb5d70d819c'),
+    '1': ObjectId('672b2c2c75b0adb5d70d819d'),
+    '2': ObjectId('672b2c2c75b0adb5d70d819e')
+  }
+}
+
+university> db.courses.find({$or:[{{duration: {$lt:6}}, {instructor:{$exists: false}}]})
+------------------------------------------------------------------------------------
+Q U E R Y  5
+university> db.orders.insertMany([{order_id:1, status: "shipped", shipped_date:29}, {order_id:5, status:"not shipped", shipped_date:null}, {order_id:9, status:"shipped", shipped_date:25}])       
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b2dab75b0adb5d70d819f'),
+    '1': ObjectId('672b2dab75b0adb5d70d81a0'),
+    '2': ObjectId('672b2dab75b0adb5d70d81a1')
+  }
+}
+university> db.orders.find({$or:[{status: {$ne: "shipped" }}, {shipped_date: {
+...
+university> db.orders.find({$or:[{status: {$ne: "shipped" }}, {shipped_date: {$exists: false}}]})
+[
+  {
+    _id: ObjectId('672b2dab75b0adb5d70d81a0'),
+    order_id: 5,
+    status: 'not shipped',
+    shipped_date: null
+  }
+]
+------------------------------------------------------------------------------
+Q U E R Y  6
+university> db.createCollection("naukar")
+{ ok: 1 }
+university> db.createCollection("naukar")
+{ ok: 1 }
+university> db.naukar.insertMany([{name:"Ramesh", dept:"Engineering"}, {name:"Suresh", dept:"IT"}, {name:"Rakesh", dept:""}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b2ef775b0adb5d70d81a2'),
+    '1': ObjectId('672b2ef775b0adb5d70d81a3'),
+    '2': ObjectId('672b2ef775b0adb5d70d81a4')
+  }
+}
+university> db.naukar.find({department:{$nin:["Engineering", "IT"]}}, {name: 1, departme
+department: 1})
+  { _id: ObjectId('672b2ef775b0adb5d70d81a3'), name: 'Suresh' },
+  { _id: ObjectId('672b2ef775b0adb5d70d81a4'), name: 'Rakesh' }
+]
+----------------------------------------------------------------------------------
+Q U E R Y  7
+university> db.createCollection("Bacche")
+{ ok: 1 }
+university> db.Bacche.insertMany([{name:"Henry", score:70, participate:false
+...
+university> db.Bacche.insertMany([{name:"Henry", score:70, participate:false},{name:"Barry", score:60, participate:true},{name:"Bhargav", score:100, participate:false}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b304075b0adb5d70d81a5'),
+    '1': ObjectId('672b304075b0adb5d70d81a6'),
+    '2': ObjectId('672b304075b0adb5d70d81a7')
+  }
+}
+university> db.Bacche.find({exam_score: {$lt: 50}, participate: false})
+--------------------------------------------------------------------------------
+Q U E R Y  8
+university> db.createCollection("StillNaukar")
+{ ok: 1 }
+university> db.StillNaukar.insertMany([{department:"Sales", exp:25, age:55},{department:"Sales", exp:7, age:27},{department:"IT", exp:2, age:24}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b312375b0adb5d70d81a8'),
+    '1': ObjectId('672b312375b0adb5d70d81a9'),
+    '2': ObjectId('672b312375b0adb5d70d81aa')
+  }
+}
+university> db.StillNaukar.find({department:"Sales", $or:[{exp:{$gt:3}}, {age:{$lt:25}}]})
+[
+  {
+    _id: ObjectId('672b312375b0adb5d70d81a8'),
+    department: 'Sales',
+    exp: 25,
+    age: 55
+  },
+  {
+    _id: ObjectId('672b312375b0adb5d70d81a9'),
+    department: 'Sales',
+    exp: 7,
+    age: 27
+  }
+]
+---------------------------------------------------------------------------------
+Q U E R Y  9
+university> db.createCollection("inventory")
+{ ok: 1 }
+university> db.inventory.insertMany([{price:200, stock:null},{price:70, stock:300},{price:300, stock:400}])
+{
+e:300, stock:400}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672b322275b0adb5d70d81ab'),
+    '1': ObjectId('672b322275b0adb5d70d81ac'),
+    '2': ObjectId('672b322275b0adb5d70d81ad')
+  }
+}
+university> db.inventory.find({$or:[{price:{$lt:100}},{stock:{$exists:false}}]})        
+[
+  { _id: ObjectId('672b322275b0adb5d70d81ac'), price: 70, stock: 300 }
+]
+---------------------------------------------------------------------------------
+Q U E R Y  10
+university> db.courses.find({$nor:[{instructor:"John Smith"},{duration}]
+...
+university> db.courses.find({$nor:[{instructor:"John Smith"},{duration:{$gt:10}}]})     
+[
+  {
+    _id: ObjectId('672b2c2c75b0adb5d70d819c'),
+    instructor: 'David',
+    duration: 6
+  },
+  {
+    _id: ObjectId('672b2c2c75b0adb5d70d819d'),
+    instructor: 'Hagrid',
+    duration: 8
+  },
+  {
+    _id: ObjectId('672b2c2c75b0adb5d70d819e'),
+    instructor: 'Dumble',
+    duration: 3
+  }
+]
+-----------------------------------------------------------------------------
+
+
+
+
+
