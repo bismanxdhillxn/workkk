@@ -1,0 +1,29 @@
+1) db.studentsData.find( { grade: { $ne: 'A' } }, { name: 1, grade: 1 } )
+
+2) db.studentsData.find( { age: { $lt: 18 } })
+
+3) db.createCollection('employee')
+
+4) db.employee.insertMany([{'id':1,'name':'Suresh','experience':12,'dept':'CSE'} , {'id':2,'name':'Raj','experience':15,'dept':'Chem'} , {'id':3,'name':'Ramesh','experience':9,'dept':'Maths'}])
+
+5) db.employee.find({'experience':{$gt:10}})
+
+6) db.courses.insertMany([{'course_name':'Maths','instructor':'Suresh','duration':12} , {'course_name':'Chemistry','instructor':'Raj','duration':10}])
+
+7) db.courses.find({duration:{$gte:12}} , {course_name:1,instructor:1})
+
+8) db.inventory.insertMany([{'item_name':'chips','price':20,'stock':10} , {'item_name':'oats','price':200,'stock':5} , {'item_name':'bread','price':50,'stock':20}])
+
+9) db.inventory.find({price:{$lte:100}} , {item_name:1,price:1})
+
+10) db.students.find({name:{$in:['Alice','Bob','Charlie']}})
+
+11)  db.library.insertMany([ {'title':'The Jungle Book','author':'JK Rowling','pages':200} , {'title':'XYZ','author':'ABC','pages':250} ])
+
+12) db.library.find({ $and: [ { pages: { $gt: 150 } } ,{ pages: { $lt: 500 } }] })
+
+13) db.employees.find({ dept:{$ne:'HR'} , salary:{$gt:60000} })
+
+14)  db.orders.find( {$or: [ {status:'completed'} , {status:'in progress'}  ]})
+
+15) db.student.find( { rollno: { $gte: 500 }, dept: { $in: ['Physics', 'Biology', 'Chemistry'] }})
