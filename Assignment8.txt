@@ -1,0 +1,213 @@
+Q U E R Y   1 --->
+
+university> db.createCollection("task")
+{ ok: 1 }
+university> db.createCollection("peers")
+{ ok: 1 }
+university> db.task.insertMany([{course_name:"Engg"}, {course_name:"BBA"}, {course_name:"BCOM"}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672f255452a6a9dced0d8196'),
+    '1': ObjectId('672f255452a6a9dced0d8197'),
+    '2': ObjectId('672f255452a6a9dced0d8198')
+  }
+}
+university> db.peers.insertMany([{name:"Ram", course_id:ObjectId('672f255452a6a9dced0d8196')}, {name:"Shyam", course_id: ObjectId('672f255452a6a9dced0d8197')}, {name:"Bhola", course_id: ObjectId('672f255452a6a9dced0d8198')}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('672f25cb52a6a9dced0d8199'),
+    '1': ObjectId('672f25cb52a6a9dced0d819a'),
+    '2': ObjectId('672f25cb52a6a9dced0d819b')
+  }
+}
+university> db.peers.aggregation([{$lookup:{from:"task", localField:"course_id", foreignField:"_id", as:"name_with_course_name"}}])
+TypeError: db.peers.aggregation is not a function
+university> db.peers.aggregate([{$lookup:{from:"task", localField:"course_id", foreignField:"_id", as:"name_with_course_name"}}])
+[
+  {
+    _id: ObjectId('672f25cb52a6a9dced0d8199'),
+    name: 'Ram',
+    course_id: ObjectId('672f255452a6a9dced0d8196'),
+    name_with_course_name: [
+      {
+        _id: ObjectId('672f255452a6a9dced0d8196'),
+        course_name: 'Engg'
+      }
+    ]
+  },
+  {
+    _id: ObjectId('672f25cb52a6a9dced0d819a'),
+    name: 'Shyam',
+    course_id: ObjectId('672f255452a6a9dced0d8197'),
+    name_with_course_name: [
+      { _id: ObjectId('672f255452a6a9dced0d8197'), course_name: 'BBA' }
+    ]
+  },
+  {
+    _id: ObjectId('672f25cb52a6a9dced0d819b'),
+    name: 'Bhola',
+    course_id: ObjectId('672f255452a6a9dced0d8198'),
+    name_with_course_name: [
+      {
+        _id: ObjectId('672f255452a6a9dced0d8198'),
+        course_name: 'BCOM'
+      }
+    ]
+  }
+]
+--------------------------------------------------------------------------------------------------------------
+Q U E R Y   2  --->
+
+university> db.peers.aggregate([{$lookup:{from:"task", localField:"course_id", foreignField:"_id", as:"name_with_course_name"}}, {$match:{score:{$gt:75}}}])
+---------------------------------------------------------------------------------------------------------------
+Q U E R Y   3 --->
+
+university> db.Grahak.aggregate([{$lookup:{from:"courier", localField:"_id", foreignField:"customer_id", as:"courierInfo"}},{$unwind:"$courierInfo"},{$match:{"courierInfo.amount":{$gt:500}, location:"New York"}}])
+---------------------------------------------------------------------------------------------------------------
+Q U E R Y   4 --->
+
+
+university> db.sales.aggregate([
+  {
+    $lookup: {
+      from: "products",
+      localField: "productId",
+      foreignField: "_id",
+      as: "productDetails"
+    }
+  },
+  {
+    $unwind: "$productDetails"
+  },
+  {
+    $match: {
+      "productDetails.price": { $gt: 20 }
+    }
+  },
+  {
+    $group: {
+      _id: "$productId",
+      totalRevenue: {
+        $sum: { $multiply: ["$quantity", "$productDetails.price"] }
+      }
+    }
+  }
+]);
+-----------------------------------------------------------------------------------------------------------------
+Q U E R Y   5 ---->
+
+university>db.employees.aggregate([
+  {
+    $match: {
+      department: { $in: ["HR", "Engineering", "Marketing"] }
+    }
+  }
+]);
+-----------------------------------------------------------------------------------------------------------------
+Q U E R Y   6 ---->
+
+university>db.transactions.aggregate([
+  {
+    $match: {
+      $or: [
+        { type: "credit" },
+        { amount: { $gt: 1000 } }
+      ]
+    }
+  }
+]);
+------------------------------------------------------------------------------------------------------------------
+Q U E R Y   7 ----->
+
+university>db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      localField: "customerId",
+      foreignField: "_id",
+      as: "customerDetails"
+    }
+  },
+  {
+    $unwind: "$customerDetails"
+  },
+  {
+    $match: {
+      "customerDetails.membership": { $ne: "premium" }
+    }
+  }
+]);
+---------------------------------------------------------------------------------------------------------------------
+Q U E R Y   8 ----->
+
+university>db.students.aggregate([
+  {
+    $lookup: {
+      from: "courses",
+      localField: "courseId",
+      foreignField: "_id",
+      as: "courseDetails"
+    }
+  },
+  {
+    $unwind: "$courseDetails"
+  },
+  {
+    $lookup: {
+      from: "instructors",
+      localField: "courseDetails.instructorId",
+      foreignField: "_id",
+      as: "instructorDetails"
+    }
+  },
+  {
+    $unwind: "$instructorDetails"
+  },
+  {
+    $project: {
+      _id: 0,
+      studentName: "$name",
+      courseName: "$courseDetails.course_name",
+      instructorName: "$instructorDetails.name"
+    }
+  }
+]);
+-------------------------------------------------------------------------------------------------------------------
+Q U E R Y   9 ---->
+
+university>db.purchases.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      localField: "customerId",
+      foreignField: "_id",
+      as: "customerDetails"
+    }
+  },
+  {
+    $unwind: "$customerDetails"
+  },
+  {
+    $match: {
+      "customerDetails.loyaltyPoints": { $gte: 1000 }
+    }
+  }
+]);
+------------------------------------------------------------------------------------------------------------
+Q U E R Y   10 ---->
+
+university>db.products.aggregate([
+  {
+    $match: {
+      $and: [
+        { category: "electronics" },
+        { price: { $lt: 500 } },
+        { stock: { $gt: 10 } }
+      ]
+    }
+  }
+]);
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
