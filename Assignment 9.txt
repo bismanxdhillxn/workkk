@@ -1,0 +1,147 @@
+1. Find Orders Above a Certain Amount with a Specific Status
+javascript
+Copy code
+db.orders.find({
+    orderTotal: { $gt: 100 },
+    orderStatus: "shipped"
+});
+-----------------------------------------------------------
+2. Total Quantity of Products Sold by Category
+javascript
+Copy code
+db.sales.aggregate([
+    {
+        $group: {
+            _id: "$category",
+            totalQuantitySold: { $sum: "$quantity" }
+        }
+    }
+]);
+-------------------------------------------------------
+3. Join User Details with Orders Using $lookup
+javascript
+Copy code
+db.users.aggregate([
+    {
+        $lookup: {
+            from: "orders",
+            localField: "userId",
+            foreignField: "userId",
+            as: "userOrders"
+        }
+    }
+]);
+----------------------------------------------------------
+4. Calculate Total Amount Spent Per Customer
+javascript
+Copy code
+db.transactions.aggregate([
+    {
+        $group: {
+            _id: "$customerId",
+            totalAmountSpent: { $sum: "$amount" }
+        }
+    }
+]);
+------------------------------------------------------------
+5. Total Revenue Generated in 2023
+javascript
+Copy code
+db.orders.aggregate([
+    {
+        $match: { year: 2023 }
+    },
+    {
+        $group: {
+            _id: null,
+            totalRevenue: { $sum: "$orderTotal" }
+        }
+    }
+]);
+-----------------------------------------------------------
+6. Join Employees with Departments and Filter by Specific Department
+javascript
+Copy code
+db.employees.aggregate([
+    {
+        $lookup: {
+            from: "departments",
+            localField: "departmentId",
+            foreignField: "departmentId",
+            as: "departmentDetails"
+        }
+    },
+    {
+        $match: { "departmentDetails.name": "Sales" }
+    }
+]);
+-----------------------------------------------------------
+7. Calculate Total Sales for Each Category-Brand Combination
+javascript
+Copy code
+db.products.aggregate([
+    {
+        $group: {
+            _id: { category: "$category", brand: "$brand" },
+            totalSales: { $sum: "$sales" }
+        }
+    }
+]);
+------------------------------------------------------------
+8. Count How Many Times Each Book Has Been Borrowed
+javascript
+Copy code
+db.books.aggregate([
+    {
+        $lookup: {
+            from: "borrowRecords",
+            localField: "bookId",
+            foreignField: "bookId",
+            as: "borrowDetails"
+        }
+    },
+    {
+        $project: {
+            title: 1,
+            borrowCount: { $size: "$borrowDetails" }
+        }
+    }
+]);
+-------------------------------------------------------------
+9. Calculate Revenue from VIP Customers
+javascript
+Copy code
+db.orders.aggregate([
+    {
+        $lookup: {
+            from: "customers",
+            localField: "customerId",
+            foreignField: "customerId",
+            as: "customerDetails"
+        }
+    },
+    {
+        $unwind: "$customerDetails"
+    },
+    {
+        $match: { "customerDetails.membershipTier": "VIP" }
+    },
+    {
+        $group: {
+            _id: null,
+            totalRevenue: { $sum: "$orderTotal" }
+        }
+    }
+]);
+----------------------------------------------------------------
+10. Calculate Average Product Rating
+javascript
+Copy code
+db.reviews.aggregate([
+    {
+        $group: {
+            _id: "$productId",
+            averageRating: { $avg: "$rating" }
+        }
+    }
+]);
