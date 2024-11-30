@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Product Image</title>
+</head>
+
+<body>
+    <h1>Upload Product Image</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <!-- Input field for the name -->
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required>
+
+        <!-- Input field for the image upload -->
+        <label for="productImage">Product Image:</label>
+        <input type="file" id="productImage" name="productImage" required>
+
+        <button type="submit">Upload</button>
+    </form>
+</body>
+
+</html>
